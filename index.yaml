@@ -1,0 +1,11 @@
+apiVersion: v1
+entries:
+  zigbee2mqtt:
+  - apiVersion: v2
+    created: "2023-04-11T21:20:33.575986823Z"
+    digest: 4307aaaeb534efbee049aaf005e541dc003e88a8f26f2b5620e6f361f5ccbcaf
+    name: zigbee2mqtt
+    urls:
+    - https://github.com/ammarlakis/home-assistant-chart/releases/download/zigbee2mqtt-0.0.1/zigbee2mqtt-0.0.1.tgz
+    version: 0.0.1
+generated: "2023-04-11T21:20:33.575995423Z"
