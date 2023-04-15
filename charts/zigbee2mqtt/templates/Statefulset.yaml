@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: "{{ .Release.Name }}"
+spec:
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-zigbee2mqtt"
+  serviceName: "{{ .Release.Name }}"
+  replicas: {{ .Values.zigbee2mqtt.replicas | int }}
+  template:
+    metadata:
+      labels:
+        app: "{{ .Release.Name }}-zigbee2mqtt"
+    spec:
+      containers:
+        - name: app
+          securityContext:
+            privileged: true
+          image: "{{ .Values.zigbee2mqtt.image }}"
+          ports:
+            - containerPort: 8080
+              name: mqtt
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+            - name: udev
+              mountPath: /run/udev
+              readOnly: true
+            - name: zigbee-device
+              mountPath: /dev/ttyACM0
+          env:
+          - name: TZ
+            value: "{{ .Values.zigbee2mqtt.config.TZ }}"
+      volumes:
+        - name: udev
+          hostPath:
+            path: /run/udev
+            type: Directory
+        - name: zigbee-device
+          hostPath:
+            path: "{{ .Values.zigbee2mqtt.config.zigbee_device }}"
+            type: ""
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

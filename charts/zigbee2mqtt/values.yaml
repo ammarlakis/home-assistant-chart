@@ -1,0 +1,6 @@
+zigbee2mqtt:
+  image: koenkk/zigbee2mqtt
+  replicas: 1
+  config:
+    TZ: "Europe/Berlin"
+    zigbee_device: /dev/ttyUSB0
