@@ -16,6 +16,19 @@ spec:
         app: homeassistant
     spec:
       hostNetwork: true
+      initContainers:
+        - name: init
+          image: busybox
+          command: ["sh"]
+          args:
+          - -c
+          - "cp /configuration.yaml /app/data/"
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+            - name: config
+              mountPath: /configuration.yaml
+              subPath: configuration.yaml
       containers:
       - name: {{ .Chart.Name }}
         image: "{{ .Values.homeassistant.image }}"
