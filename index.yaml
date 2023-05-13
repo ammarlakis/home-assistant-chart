@@ -2,13 +2,6 @@ apiVersion: v1
 entries:
   homeassistant:
   - apiVersion: v2
-    created: "2023-05-13T21:51:05.189057429Z"
-    digest: 99a2f4b3ffebf8855320213e67f43d559c2234f94295c4ee8f108d2f0ff3b7dc
-    name: homeassistant
-    urls:
-    - https://github.com/ammarlakis/home-assistant-chart/releases/download/homeassistant-v0.1/homeassistant-v0.1.tgz
-    version: v0.1
-  - apiVersion: v2
     created: "2023-05-13T22:47:28.902383605Z"
     digest: ff409557b405325a362bccd3ff2e122cfd36112668fca51628efd427d860502b
     name: homeassistant
