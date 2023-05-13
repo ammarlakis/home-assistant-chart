@@ -4,4 +4,4 @@ metadata:
   name: {{ .Release.Name }}-zigbee2mqtt-config
 data:
   configuration.yaml: |
-  {{ toYaml .Values.zigbee2mqtt.config2 | nindent 4 }}
+  {{- toYaml .Values.zigbee2mqtt.initConfig | nindent 4 -}}
