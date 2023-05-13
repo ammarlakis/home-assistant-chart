@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: homeassistant
+  name: {{ .Release.Name }}-homeassistant
 spec:
   rules:
   - host: {{ .Values.homeassistant.hostname }}
@@ -10,7 +10,7 @@ spec:
       - path: /
         backend:
           service:
-            name: ha-web
+            name: {{ .Release.Name }}-ha-web
             port:
               name: http
         pathType: ImplementationSpecific

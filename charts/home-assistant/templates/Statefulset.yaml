@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: homeassistant
+  name: {{ .Release.Name }}-homeassistant
   labels:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 spec:
-  serviceName: ha-web
+  serviceName: {{ .Release.Name }}-ha-web
   selector:
     matchLabels:
-      app: homeassistant
+      app: {{ .Release.Name }}-homeassistant
   replicas: 1
   template:
     metadata:
       labels:
-        app: homeassistant
+        app: {{ .Release.Name }}-homeassistant
     spec:
       hostNetwork: true
       initContainers:
@@ -22,7 +22,7 @@ spec:
           command: ["sh"]
           args:
           - -c
-          - "cp /configuration.yaml /app/data/"
+          - "[ -f /app/data/configuration.yaml ] || cp /configuration.yaml /app/data/"
           volumeMounts:
             - name: data
               mountPath: /app/data
@@ -51,6 +51,9 @@ spec:
         hostPath:
           path: "{{ .Values.homeassistant.config.zigbee_device }}"
           type: ""
+      - name: config
+        configMap:
+          name: "{{ .Release.Name }}-homeassistant-config"
   volumeClaimTemplates:
     - metadata:
         name: data
