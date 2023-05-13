@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: homeassistant
+  labels:
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+spec:
+  serviceName: ha-web
+  selector:
+    matchLabels:
+      app: homeassistant
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: homeassistant
+    spec:
+      hostNetwork: true
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.homeassistant.image }}"
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+          - name: data
+            mountPath: /config
+          - name: zigbee-device
+            mountPath: /dev/ttyACM0
+        ports:
+        - containerPort: 8123
+          name: http
+        securityContext:
+          privileged: true
+        env:
+        - name: TZ
+          value: "{{ .Values.homeassistant.config.TZ }}"
+      volumes:
+      - name: zigbee-device
+        hostPath:
+          path: "{{ .Values.homeassistant.config.zigbee_device }}"
+          type: ""
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
