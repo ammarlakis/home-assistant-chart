@@ -1,0 +1,6 @@
+homeassistant:
+  hostname: homeassistant.home
+  image: ghcr.io/home-assistant/home-assistant:stable
+  config:
+    TZ: "Europe/Berlin"
+    zigbee_device: /dev/ttyUSB0
