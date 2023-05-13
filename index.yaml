@@ -1,6 +1,21 @@
 apiVersion: v1
 entries:
+  homeassistant:
+  - apiVersion: v2
+    created: "2023-05-13T21:51:05.189057429Z"
+    digest: 99a2f4b3ffebf8855320213e67f43d559c2234f94295c4ee8f108d2f0ff3b7dc
+    name: homeassistant
+    urls:
+    - https://github.com/ammarlakis/home-assistant-chart/releases/download/homeassistant-v0.1/homeassistant-v0.1.tgz
+    version: v0.1
   zigbee2mqtt:
+  - apiVersion: v2
+    created: "2023-05-13T21:51:05.302859557Z"
+    digest: a22e1d672abd1be898c0f3067f56ec50c126d98e4dd99390d71e4fe852503074
+    name: zigbee2mqtt
+    urls:
+    - https://github.com/ammarlakis/home-assistant-chart/releases/download/zigbee2mqtt-0.0.2/zigbee2mqtt-0.0.2.tgz
+    version: 0.0.2
   - apiVersion: v2
     created: "2023-04-15T03:58:26.76066048Z"
     digest: 6ac9dbc9669d01e07af553f09ce99a1911b41c7cbf24870576d9b9de4c1b3c30
@@ -8,4 +23,4 @@ entries:
     urls:
     - https://github.com/ammarlakis/home-assistant-chart/releases/download/zigbee2mqtt-0.0.1/zigbee2mqtt-0.0.1.tgz
     version: 0.0.1
-generated: "2023-04-15T03:58:26.76066948Z"
+generated: "2023-05-13T21:51:05.302866557Z"
