@@ -19,7 +19,7 @@ spec:
           command: ["sh"]
           args:
           - -c
-          - "cp /configuration.yaml /app/data/"
+          - "[ -f /app/data/configuration.yaml ] || cp /configuration.yaml /app/data/"
           volumeMounts:
             - name: data
               mountPath: /app/data
