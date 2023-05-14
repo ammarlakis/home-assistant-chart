@@ -6,4 +6,4 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
 data:
   configuration.yaml: |
-    {{- toYaml .Values.homeassistant.initConfig | nindent 4 -}}
+    {{- .Values.homeassistant.initConfig | nindent 4 -}}
