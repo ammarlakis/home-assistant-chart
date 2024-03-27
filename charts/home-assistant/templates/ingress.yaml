@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: {{ include "homeassistant.fullname" . }}
   labels:
-    {{- include "homeassistant.labels" | nindent 4 }}
+    {{- include "homeassistant.labels" . | nindent 4 }}
 spec:
   rules:
   - host: {{ .Values.homeassistant.hostname }}
@@ -12,7 +12,7 @@ spec:
       - path: /
         backend:
           service:
-            name: {{ include ".homeassistant.fullname" . }}
+            name: {{ include "homeassistant.fullname" . }}
             port:
               name: http
         pathType: ImplementationSpecific

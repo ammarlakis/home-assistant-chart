@@ -3,11 +3,11 @@ kind: Service
 metadata:
   name: {{ include "homeassistant.fullname" . }}
   labels:
-    {{- include "homeassistant.labels" | nindent 4 }}
+    {{- include "homeassistant.labels" . | nindent 4 }}
 spec:
   ports:
   - port: 80
     targetPort: http
     name: http
   selector:
-    app: {{ include ".homeassistant.fullname" }}
+    app: {{ include "homeassistant.fullname" . }}
