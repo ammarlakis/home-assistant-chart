@@ -1,9 +1,11 @@
 homeassistant:
   hostname: homeassistant.home
   image: ghcr.io/home-assistant/home-assistant:stable
+  containerPort: 8123
   config:
     TZ: "Europe/Berlin"
     zigbee_device: /dev/ttyUSB0
+  
 
   initConfig: |
     default_config:
@@ -20,3 +22,22 @@ homeassistant:
       use_x_forwarded_for: true
       trusted_proxies:
         - 10.42.0.0/24
+# podAnnotations
+# podLabels
+# imagePullSecrets
+# podSecurityContext
+# hostNetwork
+# securityContext
+# image
+# service
+# livenessProbe
+# readinessProbe
+# resources
+# volumeMounts
+# volumes
+# nodeSelector
+# affinity
+# tolerations
+# homeassistant
+# nameOverride
+# fullnameOverride

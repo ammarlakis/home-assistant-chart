@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-homeassistant-config
+  name: {{ include "homeassistant.fullname" . }}
   labels:
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    {{- include "homeassistant.labels" | nindent 4 }}
 data:
   configuration.yaml: |
     {{- .Values.homeassistant.initConfig | nindent 4 -}}

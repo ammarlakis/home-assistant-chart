@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}-homeassistant
+  name: {{ include "homeassistant.fullname" . }}
   labels:
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}"
+    {{- include "homeassistant.labels" . | nindent 4 }}
 spec:
-  serviceName: {{ .Release.Name }}-ha-web
+  serviceName: {{ include "homeassistant.fullname" . }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}-homeassistant
+      {{- include "homeassistant.selectorLabels" . | nindent 6}}
   replicas: 1
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}-homeassistant
+        {{- include "homeassistant.selectorLabels" . | nindent 8}}
     spec:
-      hostNetwork: true
+      hostNetwork: {{ .Values.homeassistant.hostNetwork }}
       initContainers:
         - name: init
           image: busybox
@@ -30,19 +30,19 @@ spec:
               mountPath: /configuration.yaml
               subPath: configuration.yaml
       containers:
-      - name: {{ .Chart.Name }}
-        image: "{{ .Values.homeassistant.image }}"
+      - name: homeassistant
+        image: {{ .Values.homeassistant.image }}
         imagePullPolicy: IfNotPresent
         volumeMounts:
           - name: data
             mountPath: /config
+        {{- with .Values.homeassistant.zigbeeDevice }}
           - name: zigbee-device
-            mountPath: /dev/ttyACM0
+            mountPath: {{ .Values.homeassistant.zigbeeDevice }}
+        {{- end }}
         ports:
-        - containerPort: 8123
+        - containerPort: {{ .Values.homeassistant.containerPort }}
           name: http
-        securityContext:
-          privileged: true
         env:
         - name: TZ
           value: "{{ .Values.homeassistant.config.TZ }}"
@@ -56,9 +56,9 @@ spec:
           name: "{{ .Release.Name }}-homeassistant-config"
   volumeClaimTemplates:
     - metadata:
-        name: data
+        name: {{ include "homeassitant.fullname" . }}
       spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 1Gi
+            storage: {{ .Values.homeassistant.storage }}
