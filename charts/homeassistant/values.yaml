@@ -8,6 +8,7 @@ homeassistant:
   config:
     TZ: "Europe/Berlin"
   zigbeeDevice: null
+  storage: 1Gi
 
   initConfig: |
     default_config:
