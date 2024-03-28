@@ -18,7 +18,7 @@ spec:
       labels:
         {{- include "homeassistant.labels" . | nindent 8 }}
     spec:
-      restartPolicy: OnFailure
+      restartPolicy: Never
       containers:
       - name: provision-users
         image: curlimages/curl:latest
