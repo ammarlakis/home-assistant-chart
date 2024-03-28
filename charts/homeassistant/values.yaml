@@ -1,9 +1,14 @@
+nameOverride: null
+fullnameOverride: null
 homeassistant:
   hostname: homeassistant.home
   image: ghcr.io/home-assistant/home-assistant:stable
+  containerPort: 8123
+  hostNetwork: false
   config:
     TZ: "Europe/Berlin"
-    zigbee_device: /dev/ttyUSB0
+  zigbeeDevice: null
+  storage: 1Gi
 
   initConfig: |
     default_config:
