@@ -10,4 +10,4 @@ spec:
     targetPort: http
     name: http
   selector:
-    app: {{ include "homeassistant.fullname" . }}
+    {{- include "homeassistant.selectorLabels" . | nindent 4 }}
