@@ -1,0 +1,54 @@
+{{- if .Values.homeassistant.adminSecret -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "homeassistant.fullname" . }}-provision-users
+  labels:
+    {{- include "homeassistant.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+      labels:
+        {{- include "homeassistant.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: provision-users
+        image: curlimages/curl:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - >
+          echo "Waiting for home-assistant to start up ..."
+          set -x;
+          while [ $(curl -L -v --connect-timeout 5 -sw '%{http_code}' "http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}/" -o /dev/null) -ne 200 ]; do
+            sleep 15;
+          done
+          echo "Home Assistant is up and running."
+          echo "Creating admin user .."
+          curl --location --request POST 'http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}/api/onboarding/users'
+          --header 'Content-Type: application/json'
+          --data-raw '
+          {
+            "client_id": "http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}/",
+            "name": "admin",
+            "username": "${USERNAME}",
+            "password": "${PASSWORD}",
+            "language": "en"
+          }'
+        env:
+        - name: USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.homeassistant.adminSecret }}
+              key: USERNAME
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.homeassistant.adminSecret }}
+              key: PASSWORD
+{{- end -}}
