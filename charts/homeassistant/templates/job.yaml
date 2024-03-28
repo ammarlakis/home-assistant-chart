@@ -1,0 +1,48 @@
+{{- if .Values.homeassistant.adminSecret -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "homeassistant.fullname" . }}-provision-users
+  labels:
+    {{- include "homeassistant.labels" . | nindent 4 }}
+  annotations:
+    # This is what defines this resource as a hook. Without this line, the
+    # job is considered part of the release.
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    metadata:
+      name: "{{ .Release.Name }}"
+      labels:
+        {{- include "homeassistant.labels" . | nindent 8 }}
+    spec:
+      restartPolicy: OnFailure
+      containers:
+      - name: provision-users
+        image: curlimages/curl:latest
+        command: ["/bin/sh", "-c"]
+        args:
+        - >
+          curl --location --request POST 'http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}:8123/api/onboarding/users' \
+          --header 'Content-Type: application/json' \
+          --data-raw '{
+              "client_id": "http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}:8123/",
+              "name": "admin",
+              "username": "${ADMIN}",
+              "password": "${PASSWORD}",
+              "language": "en"
+          }'
+        env:
+        - name: ADMIN
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.homeassistant.adminSecret }}
+              key: ADMIN
+        - name: PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.homeassistant.adminSecret }}
+              key: PASSWORD
+{{- end -}}

@@ -1,6 +1,7 @@
 nameOverride: null
 fullnameOverride: null
 homeassistant:
+  adminSecret: ha-admin
   hostname: homeassistant.home
   image: ghcr.io/home-assistant/home-assistant:stable
   containerPort: 8123
