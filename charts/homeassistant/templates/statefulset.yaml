@@ -36,10 +36,14 @@ spec:
         volumeMounts:
         - name: {{ include "homeassistant.fullname" . }}
           mountPath: /config
-        {{- if eq (include "homeassistant.values.automationsProvided" .) "true" }}
         - name: automations
           mountPath: /config/automations/
-        {{- end }}
+        - name: themes
+          mountPath: /config/themes/
+        - name: scenes
+          mountPath: /config/scenes/
+        - name: scripts
+          mountPath: /config/scripts/
         {{- with .Values.homeassistant.config.zigbeeDevice }}
         - name: zigbee-device
           mountPath: {{ .Values.homeassistant.config.zigbeeDevice }}
@@ -63,6 +67,15 @@ spec:
       - name: automations
         configMap:
           name: {{ include "homeassistant.fullname" . }}-automations
+      - name: scenes
+        configMap:
+          name: {{ include "homeassistant.fullname" . }}-scenes
+      - name: themes
+        configMap:
+          name: {{ include "homeassistant.fullname" . }}-themes
+      - name: scripts
+        configMap:
+          name: {{ include "homeassistant.fullname" . }}-scripts
   volumeClaimTemplates:
   - metadata:
       name: {{ include "homeassistant.fullname" . }}
