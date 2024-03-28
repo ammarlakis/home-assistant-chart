@@ -6,9 +6,30 @@ homeassistant:
   containerPort: 8123
   hostNetwork: false
   config:
-    TZ: "Europe/Berlin"
+    TZ: Europe/Berlin
   zigbeeDevice: null
   storage: 1Gi
+  automations:
+    # automation1.yaml:
+    #   alias: "Automation 1"
+    #   trigger:
+    #     platform: state
+    #     entity_id: device_tracker.iphone
+    #     to: "home"
+    #   action:
+    #     service: light.turn_on
+    #     target:
+    #       entity_id: light.entryway
+    # automation2.yaml:
+    #   alias: "Automation 2"
+    #   trigger:
+    #     platform: state
+    #     entity_id: device_tracker.iphone
+    #     from: "home"
+    #   action:
+    #     service: light.turn_off
+    #     target:
+    #       entity_id: light.entryway
 
   initConfig: |
     default_config:
@@ -18,9 +39,9 @@ homeassistant:
     tts:
       - platform: google_translate
 
-    automation: !include automations.yaml
-    script: !include scripts.yaml
-    scene: !include scenes.yaml
+    automation: !include_dir_list automations
+    script: !include_dir_list scripts
+    scene: !include_dir_list scenes
     http:
       use_x_forwarded_for: true
       trusted_proxies:

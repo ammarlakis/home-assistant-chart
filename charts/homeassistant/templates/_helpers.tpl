@@ -49,3 +49,14 @@ Selector labels
 app.kubernetes.io/name: {{ include "homeassistant.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Condition to check if .Values.homeassistant.automations is provided
+*/}}
+{{- define "homeassistant.values.automationsProvided" -}}
+{{ if and .Values.homeassistant.automations (gt (len .Values.homeassistant.automations ) 0) -}}
+{{- true -}}
+{{- else -}}
+{{- false -}}
+{{- end -}}
+{{- end }}
