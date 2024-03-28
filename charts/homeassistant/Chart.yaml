@@ -2,5 +2,5 @@ apiVersion: v2
 name: homeassistant
 version: v0.0.8
 maintainers:
-  - name: Ammar Lakis
+  - name: ammarlakis
     url: https://github.com/ammarlakis
