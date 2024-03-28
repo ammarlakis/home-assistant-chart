@@ -1,7 +1,7 @@
 nameOverride: null
 fullnameOverride: null
 homeassistant:
-  adminSecret: null # Should have two keys USERNAME and PASSWORD
+  adminSecret: null                # Should have two keys USERNAME and PASSWORD
   hostname: homeassistant.home
   image: ghcr.io/home-assistant/home-assistant:stable
   containerPort: 8123
