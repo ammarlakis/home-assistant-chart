@@ -6,8 +6,6 @@ metadata:
   labels:
     {{- include "homeassistant.labels" . | nindent 4 }}
   annotations:
-    # This is what defines this resource as a hook. Without this line, the
-    # job is considered part of the release.
     "helm.sh/hook": post-install
     "helm.sh/hook-weight": "-5"
     "helm.sh/hook-delete-policy": hook-succeeded
@@ -25,21 +23,29 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
         - >
-          curl --location --request POST 'http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}:8123/api/onboarding/users' \
-          --header 'Content-Type: application/json' \
-          --data-raw '{
-              "client_id": "http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}:8123/",
-              "name": "admin",
-              "username": "${ADMIN}",
-              "password": "${PASSWORD}",
-              "language": "en"
+          echo "Waiting for home-assistant to start up ..."
+          set -x;
+          while [ $(curl -L -v --connect-timeout 5 -sw '%{http_code}' "http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}/" -o /dev/null) -ne 200 ]; do
+            sleep 15;
+          done
+          echo "Home Assistant is up and running."
+          echo "Creating admin user .."
+          curl --location --request POST 'http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}/api/onboarding/users'
+          --header 'Content-Type: application/json'
+          --data-raw '
+          {
+            "client_id": "http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}/",
+            "name": "admin",
+            "username": "${USERNAME}",
+            "password": "${PASSWORD}",
+            "language": "en"
           }'
         env:
-        - name: ADMIN
+        - name: USERNAME
           valueFrom:
             secretKeyRef:
               name: {{ .Values.homeassistant.adminSecret }}
-              key: ADMIN
+              key: USERNAME
         - name: PASSWORD
           valueFrom:
             secretKeyRef:

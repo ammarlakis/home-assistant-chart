@@ -1,7 +1,7 @@
 nameOverride: null
 fullnameOverride: null
 homeassistant:
-  adminSecret: null
+  adminSecret: null # Should have two keys USERNAME and PASSWORD
   hostname: homeassistant.home
   image: ghcr.io/home-assistant/home-assistant:stable
   containerPort: 8123
@@ -51,3 +51,4 @@ homeassistant:
       use_x_forwarded_for: true
       trusted_proxies:
         - 10.42.0.0/24
+        - 0.0.0.0/0
