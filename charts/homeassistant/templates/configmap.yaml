@@ -6,4 +6,18 @@ metadata:
     {{- include "homeassistant.labels" . | nindent 4 }}
 data:
   configuration.yaml: |
-    {{- .Values.homeassistant.initConfig | nindent 4 -}}
+    {{- .Values.homeassistant.initConfig | nindent 4 }}
+---
+{{- if eq (include "homeassistant.values.automationsProvided" .) "true" }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "homeassistant.fullname" . }}-automations
+  labels:
+    {{- include "homeassistant.labels" . | nindent 4 }}
+data:
+{{- range $fileName, $content := .Values.homeassistant.automations }}
+  {{ $fileName }}: |
+{{ toYaml $content | indent 4 }}
+{{- end }}
+{{- end }}
