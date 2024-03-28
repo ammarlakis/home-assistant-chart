@@ -36,9 +36,9 @@ spec:
         volumeMounts:
           - name: data
             mountPath: /config
-        {{- with .Values.homeassistant.zigbeeDevice }}
+        {{- with .Values.homeassistant.config.zigbeeDevice }}
           - name: zigbee-device
-            mountPath: {{ .Values.homeassistant.zigbeeDevice }}
+            mountPath: {{ .Values.homeassistant.config.zigbeeDevice }}
         {{- end }}
         ports:
         - containerPort: {{ .Values.homeassistant.containerPort }}
@@ -49,7 +49,7 @@ spec:
       volumes:
       - name: zigbee-device
         hostPath:
-          path: "{{ .Values.homeassistant.config.zigbee_device }}"
+          path: "{{ .Values.homeassistant.config.zigbeeDevice }}"
           type: ""
       - name: config
         configMap:
