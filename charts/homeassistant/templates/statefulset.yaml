@@ -24,7 +24,7 @@ spec:
         - -c
         - "[ -f /app/data/configuration.yaml ] || cp /configuration.yaml /app/data/"
         volumeMounts:
-        - name: {{ include "homeassistant.fullname" . }}
+        - name: config
           mountPath: /app/data
         - name: config
           mountPath: /configuration.yaml
@@ -34,8 +34,12 @@ spec:
         image: {{ .Values.homeassistant.image }}
         imagePullPolicy: IfNotPresent
         volumeMounts:
-        - name: {{ include "homeassistant.fullname" . }}
+        - name: config
           mountPath: /config
+        {{- if eq (include "homeassistant.values.automationsProvided" .) "true" }}
+        - name: automations
+          mountPath: /config/automations/
+        {{- end }}
         {{- with .Values.homeassistant.config.zigbeeDevice }}
         - name: zigbee-device
           mountPath: {{ .Values.homeassistant.config.zigbeeDevice }}
@@ -56,6 +60,9 @@ spec:
       - name: config
         configMap:
           name: {{ include "homeassistant.fullname" . }}
+      - name: automations
+        configMap:
+          name: {{ include "homeassistant.fullname" . }}-automations
   volumeClaimTemplates:
   - metadata:
       name: {{ include "homeassistant.fullname" . }}

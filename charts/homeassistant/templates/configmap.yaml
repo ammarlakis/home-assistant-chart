@@ -8,7 +8,7 @@ data:
   configuration.yaml: |
     {{- .Values.homeassistant.initConfig | nindent 4 }}
 ---
-{{- if and .Values.homeassistant.automations (gt (len .Values.homeassistant.automations ) 0) }}
+{{- if eq (include "homeassistant.values.automationsProvided" .) "true" }}
 apiVersion: v1
 kind: ConfigMap
 metadata:

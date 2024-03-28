@@ -10,26 +10,26 @@ homeassistant:
   zigbeeDevice: null
   storage: 1Gi
   automations:
-    automation1.yaml:
-      alias: "Automation 1"
-      trigger:
-        platform: state
-        entity_id: device_tracker.iphone
-        to: "home"
-      action:
-        service: light.turn_on
-        target:
-          entity_id: light.entryway
-    automation2.yaml:
-      alias: "Automation 2"
-      trigger:
-        platform: state
-        entity_id: device_tracker.iphone
-        from: "home"
-      action:
-        service: light.turn_off
-        target:
-          entity_id: light.entryway
+    # automation1.yaml:
+    #   alias: "Automation 1"
+    #   trigger:
+    #     platform: state
+    #     entity_id: device_tracker.iphone
+    #     to: "home"
+    #   action:
+    #     service: light.turn_on
+    #     target:
+    #       entity_id: light.entryway
+    # automation2.yaml:
+    #   alias: "Automation 2"
+    #   trigger:
+    #     platform: state
+    #     entity_id: device_tracker.iphone
+    #     from: "home"
+    #   action:
+    #     service: light.turn_off
+    #     target:
+    #       entity_id: light.entryway
 
   initConfig: |
     default_config:
