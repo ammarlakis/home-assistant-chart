@@ -24,7 +24,7 @@ spec:
         - -c
         - "[ -f /app/data/configuration.yaml ] || cp /configuration.yaml /app/data/"
         volumeMounts:
-        - name: config
+        - name: {{ include "homeassistant.fullname" . }}
           mountPath: /app/data
         - name: config
           mountPath: /configuration.yaml
@@ -34,7 +34,7 @@ spec:
         image: {{ .Values.homeassistant.image }}
         imagePullPolicy: IfNotPresent
         volumeMounts:
-        - name: config
+        - name: {{ include "homeassistant.fullname" . }}
           mountPath: /config
         {{- if eq (include "homeassistant.values.automationsProvided" .) "true" }}
         - name: automations
