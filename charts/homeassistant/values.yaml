@@ -18,9 +18,9 @@ homeassistant:
     tts:
       - platform: google_translate
 
-    automation: !include automations.yaml
-    script: !include scripts.yaml
-    scene: !include scenes.yaml
+    automation: !include_dir_list automations
+    script: !include_dir_list scripts
+    scene: !include_dir_list scenes
     http:
       use_x_forwarded_for: true
       trusted_proxies:
