@@ -16,26 +16,16 @@ spec:
         {{- include "homeassistant.selectorLabels" . | nindent 8}}
     spec:
       hostNetwork: {{ .Values.homeassistant.hostNetwork }}
-      initContainers:
-      - name: init
-        image: busybox
-        command: ["sh"]
-        args:
-        - -c
-        - "[ -f /app/data/configuration.yaml ] || cp /configuration.yaml /app/data/"
-        volumeMounts:
-        - name: {{ include "homeassistant.fullname" . }}
-          mountPath: /app/data
-        - name: config
-          mountPath: /configuration.yaml
-          subPath: configuration.yaml
       containers:
       - name: homeassistant
         image: {{ .Values.homeassistant.image }}
         imagePullPolicy: IfNotPresent
         volumeMounts:
         - name: {{ include "homeassistant.fullname" . }}
-          mountPath: /config
+          mountPath: /config/
+        - name: config
+          mountPath: /config/configuration.yaml
+          subPath: configuration.yaml
         - name: automations
           mountPath: /config/automations/
         - name: themes
