@@ -1,3 +1,4 @@
+{{- if .Values.homeassistant.adminSecret -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -29,12 +30,11 @@ spec:
           --data-raw '{
               "client_id": "http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}:8123/",
               "name": "admin",
-              "username": {{ default "admin" "${ADMIN}" | quote }},
-              "password": {{ default "password" "${PASSWORD}" | quote }},
+              "username": "${ADMIN}",
+              "password": "${PASSWORD}",
               "language": "en"
           }'
         env:
-        {{- if .Values.homeassistant.adminSecret }}
         - name: ADMIN
           valueFrom:
             secretKeyRef:
@@ -45,4 +45,4 @@ spec:
             secretKeyRef:
               name: {{ .Values.homeassistant.adminSecret }}
               key: PASSWORD
-        {{- end }}
+{{- end -}}
