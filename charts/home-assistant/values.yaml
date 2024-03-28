@@ -7,7 +7,7 @@ homeassistant:
   hostNetwork: false
   config:
     TZ: "Europe/Berlin"
-  zigbeeDevice: null  
+  zigbeeDevice: null
 
   initConfig: |
     default_config:
