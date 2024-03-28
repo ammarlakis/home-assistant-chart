@@ -17,48 +17,50 @@ spec:
     spec:
       hostNetwork: {{ .Values.homeassistant.hostNetwork }}
       initContainers:
-        - name: init
-          image: busybox
-          command: ["sh"]
-          args:
-          - -c
-          - "[ -f /app/data/configuration.yaml ] || cp /configuration.yaml /app/data/"
-          volumeMounts:
-            - name: data
-              mountPath: /app/data
-            - name: config
-              mountPath: /configuration.yaml
-              subPath: configuration.yaml
+      - name: init
+        image: busybox
+        command: ["sh"]
+        args:
+        - -c
+        - "[ -f /app/data/configuration.yaml ] || cp /configuration.yaml /app/data/"
+        volumeMounts:
+        - name: {{ include "homeassistant.fullname" . }}
+          mountPath: /app/data
+        - name: config
+          mountPath: /configuration.yaml
+          subPath: configuration.yaml
       containers:
       - name: homeassistant
         image: {{ .Values.homeassistant.image }}
         imagePullPolicy: IfNotPresent
         volumeMounts:
-          - name: data
-            mountPath: /config
+        - name: {{ include "homeassistant.fullname" . }}
+          mountPath: /config
         {{- with .Values.homeassistant.config.zigbeeDevice }}
-          - name: zigbee-device
-            mountPath: {{ .Values.homeassistant.config.zigbeeDevice }}
+        - name: zigbee-device
+          mountPath: {{ .Values.homeassistant.config.zigbeeDevice }}
         {{- end }}
         ports:
         - containerPort: {{ .Values.homeassistant.containerPort }}
           name: http
         env:
         - name: TZ
-          value: "{{ .Values.homeassistant.config.TZ }}"
+          value: {{ .Values.homeassistant.config.TZ }}
       volumes:
+      {{- with .Values.homeassistant.config.zigbeeDevice }}
       - name: zigbee-device
         hostPath:
-          path: "{{ .Values.homeassistant.config.zigbeeDevice }}"
+          path: {{ . }}
           type: ""
+      {{- end }}
       - name: config
         configMap:
-          name: "{{ .Release.Name }}-homeassistant-config"
+          name: {{ include "homeassistant.fullname" . }}
   volumeClaimTemplates:
-    - metadata:
-        name: {{ include "homeassistant.fullname" . }}
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        resources:
-          requests:
-            storage: {{ .Values.homeassistant.storage }}
+  - metadata:
+      name: {{ include "homeassistant.fullname" . }}
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: {{ .Values.homeassistant.storage }}
