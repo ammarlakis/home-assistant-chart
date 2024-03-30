@@ -3,13 +3,28 @@ fullnameOverride: null
 homeassistant:
   adminSecret: null                # Should have two keys USERNAME and PASSWORD
   hostname: homeassistant.home
-  image: ghcr.io/home-assistant/home-assistant:stable
+  image: ghcr.io/home-assistant/home-assistant:latest
   containerPort: 8123
   hostNetwork: false
   config:
     TZ: Europe/Berlin
   zigbeeDevice: null
+  disableOnboarding: true
   storage: 1Gi
+  reloader:
+    image: kiwigrid/k8s-sidecar:latest
+    automations:
+      enabled: true
+      label: homeassistant.automations
+    scripts:
+      enabled: true
+      label: homeassistant.scripts
+    scenes:
+      enabled: true
+      label: homeassistant.scenes
+    themes:
+      enabled: true
+      label: homeassistant.themes
   automations:
     automation1.yaml:
       alias: "Automation 1"
@@ -38,6 +53,19 @@ homeassistant:
 
   initConfig: |
     default_config:
+
+    homeassistant:
+      name: Home
+      latitude: 31.7780191
+      longitude: 35.2354079
+      elevation: 747
+      unit_system: metric
+      currency: JOD
+      country: PS
+      time_zone: "Asia/Jerusalem"
+      language: "en"
+
+
     frontend:
       themes: !include_dir_merge_named themes
 

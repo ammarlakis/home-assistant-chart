@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "homeassistant.fullname" . }}-reload-webhooks
+  labels:
+    {{- include "homeassistant.labels" . | nindent 4 }}
+data:
+  {{- if .Values.homeassistant.reloader.scripts.enabled }}
+  _reload-scripts.yaml: |
+    id: reload-scripts
+    alias: Reload Scripts
+    description: "A webhook to reload scripts. Created by {{ .Release.Name }} helm release."
+    trigger:
+      - platform: webhook
+        allowed_methods:
+          - POST
+        local_only: true
+        webhook_id: {{ printf "%s-scripts" (include "homeassistant.reloader.webhook_id" .) | quote}}
+    condition: []
+    action:
+      - service: script.reload
+        data: {}
+    mode: single
+  {{- end }}
+
+  {{- if .Values.homeassistant.reloader.scenes.enabled }}
+  _reload-scenes.yaml: |
+    id: reload-scenes
+    alias: Reload Scenes
+    description: "A webhook to reload scenes. Created by {{ .Release.Name }} helm release."
+    trigger:
+      - platform: webhook
+        allowed_methods:
+          - POST
+        local_only: true
+        webhook_id: {{ printf "%s-scenes" (include "homeassistant.reloader.webhook_id" .) | quote}}
+    condition: []
+    action:
+      - service: scene.reload
+        data: {}
+    mode: single
+  {{- end }}
+
+  {{- if .Values.homeassistant.reloader.themes.enabled }}
+  _reload-themes.yaml: |
+    id: reload-themes
+    alias: Reload Themes
+    description: "A webhook to reload themes. Created by {{ .Release.Name }} helm release."
+    trigger:
+      - platform: webhook
+        allowed_methods:
+          - POST
+        local_only: true
+        webhook_id: {{ printf "%s-themes" (include "homeassistant.reloader.webhook_id" .) | quote}}
+    condition: []
+    action:
+      - service: frontend.reload_themes
+        data: {}
+    mode: single
+  {{- end }}
+
+  {{- if .Values.homeassistant.reloader.automations.enabled }}
+  _reload-automations.yaml: |
+    id: reload-automations
+    alias: Reload Automations
+    description: "A webhook to reload automations. Created by {{ .Release.Name }} helm release."
+    trigger:
+      - platform: webhook
+        allowed_methods:
+          - POST
+        local_only: true
+        webhook_id: {{ printf "%s-automations" (include "homeassistant.reloader.webhook_id" .) | quote}}
+    condition: []
+    action:
+      - service: automation.reload
+        data: {}
+    mode: single
+  {{- end }}
