@@ -27,6 +27,9 @@ spec:
         - name: config
           mountPath: /config/configuration.yaml
           subPath: configuration.yaml
+        - name: disable-onboarding
+          mountPath: /config/.storage/onboarding
+          subPath: onboarding
         - name: reload-webhooks
           mountPath: /config/automations/reload-webhooks/
         - name: automations
@@ -144,6 +147,9 @@ spec:
       - name: reload-webhooks
         configMap:
           name: {{ include "homeassistant.fullname" . }}-reload-webhooks
+      - name: disable-onboarding
+        configMap:
+          name: {{ include "homeassistant.fullname" . }}-disable-onboarding
   volumeClaimTemplates:
   - metadata:
       name: {{ include "homeassistant.fullname" . }}

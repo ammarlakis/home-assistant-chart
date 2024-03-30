@@ -9,6 +9,7 @@ homeassistant:
   config:
     TZ: Europe/Berlin
   zigbeeDevice: null
+  disableOnboarding: true
   storage: 1Gi
   reloader:
     image: kiwigrid/k8s-sidecar:latest

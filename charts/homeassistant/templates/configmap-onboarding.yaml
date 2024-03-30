@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "homeassistant.fullname" . }}-disable-onboarding
+  labels:
+    {{- include "homeassistant.labels" . | nindent 4 }}
+data:
+  {{- if .Values.homeassistant.reloader.scripts.enabled }}
+  onboarding: |
+    {
+      "version": 4,
+      "minor_version": 1,
+      "key": "onboarding",
+      "data": {
+        "done": [
+          "core_config",
+          "analytics",
+          "integration"
+        ]
+      }
+    }
+  {{- end }}
