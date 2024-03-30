@@ -35,8 +35,8 @@ spec:
           --data-raw '{
             "client_id": "http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}/",
             "name": "admin",
-            "username": "${USERNAME}",
-            "password": "${PASSWORD}",
+            "username": "'"$USERNAME"'",
+            "password": "'"$PASSWORD"'",
             "language": "en"
           }';
         env:
