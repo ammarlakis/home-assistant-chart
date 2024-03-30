@@ -12,7 +12,7 @@ metadata:
 spec:
   template:
     metadata:
-      name: "{{ .Release.Name }}"
+      name: {{ include "homeassistant.fullname" . }}
       labels:
         {{- include "homeassistant.labels" . | nindent 8 }}
     spec:
@@ -23,23 +23,22 @@ spec:
         command: ["/bin/sh", "-c"]
         args:
         - >
-          echo "Waiting for home-assistant to start up ..."
           set -x;
+          echo "Waiting for home-assistant to start up ...";
           while [ $(curl -L -v --connect-timeout 5 -sw '%{http_code}' "http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}/" -o /dev/null) -ne 200 ]; do
             sleep 15;
-          done
-          echo "Home Assistant is up and running."
-          echo "Creating admin user .."
+          done;
+          echo "Home Assistant is up and running.";
+          echo "Creating admin user ..";
           curl --location --request POST 'http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}/api/onboarding/users'
           --header 'Content-Type: application/json'
-          --data-raw '
-          {
+          --data-raw '{
             "client_id": "http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}/",
             "name": "admin",
-            "username": "${USERNAME}",
-            "password": "${PASSWORD}",
+            "username": "admin",
+            "password": "test",
             "language": "en"
-          }'
+          }';
         env:
         - name: USERNAME
           valueFrom:
