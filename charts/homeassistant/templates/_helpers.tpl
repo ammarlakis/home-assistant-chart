@@ -51,5 +51,5 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{- define "homeassistant.reloader.webhook_id" -}}
-{{ .Release.Time | toString | sha256sum }}
+{{ now | toString | sha256sum }}
 {{- end -}}}}
