@@ -15,27 +15,23 @@ spec:
       labels:
         {{- include "homeassistant.selectorLabels" . | nindent 8}}
     spec:
+      serviceAccountName: {{ include "homeassistant.fullname" . }}
       hostNetwork: {{ .Values.homeassistant.hostNetwork }}
-      initContainers:
-      - name: init
-        image: busybox
-        command: ["sh"]
-        args:
-        - -c
-        - "[ -f /app/data/configuration.yaml ] || cp /configuration.yaml /app/data/"
-        volumeMounts:
-        - name: {{ include "homeassistant.fullname" . }}
-          mountPath: /app/data
-        - name: config
-          mountPath: /configuration.yaml
-          subPath: configuration.yaml
       containers:
       - name: homeassistant
         image: {{ .Values.homeassistant.image }}
         imagePullPolicy: IfNotPresent
         volumeMounts:
         - name: {{ include "homeassistant.fullname" . }}
-          mountPath: /config
+          mountPath: /config/
+        - name: config
+          mountPath: /config/configuration.yaml
+          subPath: configuration.yaml
+        - name: disable-onboarding
+          mountPath: /config/.storage/onboarding
+          subPath: onboarding
+        - name: reload-webhooks
+          mountPath: /config/automations/reload-webhooks/
         - name: automations
           mountPath: /config/automations/
         - name: themes
@@ -54,6 +50,82 @@ spec:
         env:
         - name: TZ
           value: {{ .Values.homeassistant.config.TZ }}
+      {{- if .Values.homeassistant.reloader.automations.enabled }}
+      - name: config-reloader-automations
+        image: {{ .Values.homeassistant.reloader.image }}
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: automations
+          mountPath: /config/automations/
+        env:
+        - name: LABEL
+          value: {{ .Values.homeassistant.reloader.automations.label }}
+        - name: FOLDER
+          value: /config/automations/
+        - name: RESOURCE
+          value: both
+        - name: REQ_METHOD
+          value: POST
+        - name: REQ_URL
+          value: http://127.0.0.1:8123/api/webhook/{{ include "homeassistant.reloader.webhook_id" . }}-automations
+      {{- end }}
+      {{- if .Values.homeassistant.reloader.themes.enabled }}
+      - name: config-reloader-themes
+        image: {{ .Values.homeassistant.reloader.image }}
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: themes
+          mountPath: /config/themes/
+        env:
+        - name: LABEL
+          value: {{ .Values.homeassistant.reloader.themes.label }}
+        - name: FOLDER
+          value: /config/themes/
+        - name: RESOURCE
+          value: both
+        - name: REQ_METHOD
+          value: POST
+        - name: REQ_URL
+          value: http://127.0.0.1:8123/api/webhook/{{ include "homeassistant.reloader.webhook_id" . }}-themes
+      {{- end }}
+      {{- if .Values.homeassistant.reloader.scripts.enabled }}
+      - name: config-reloader-scripts
+        image: {{ .Values.homeassistant.reloader.image }}
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: scripts
+          mountPath: /config/scripts/
+        env:
+        - name: LABEL
+          value: {{ .Values.homeassistant.reloader.scripts.label }}
+        - name: FOLDER
+          value: /config/scripts/
+        - name: RESOURCE
+          value: both
+        - name: REQ_METHOD
+          value: POST
+        - name: REQ_URL
+          value: http://127.0.0.1:8123/api/webhook/{{ include "homeassistant.reloader.webhook_id" . }}-scripts
+      {{- end }}
+      {{- if .Values.homeassistant.reloader.scenes.enabled }}
+      - name: config-reloader-scenes
+        image: {{ .Values.homeassistant.reloader.image }}
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: scenes
+          mountPath: /config/scenes/
+        env:
+        - name: LABEL
+          value: {{ .Values.homeassistant.reloader.scenes.label }}
+        - name: FOLDER
+          value: /config/scenes/
+        - name: RESOURCE
+          value: both
+        - name: REQ_METHOD
+          value: POST
+        - name: REQ_URL
+          value: http://127.0.0.1:8123/api/webhook/{{ include "homeassistant.reloader.webhook_id" . }}-scenes
+      {{- end }}
       volumes:
       {{- with .Values.homeassistant.config.zigbeeDevice }}
       - name: zigbee-device
@@ -65,17 +137,19 @@ spec:
         configMap:
           name: {{ include "homeassistant.fullname" . }}
       - name: automations
-        configMap:
-          name: {{ include "homeassistant.fullname" . }}-automations
+        emptyDir: {}
       - name: scenes
-        configMap:
-          name: {{ include "homeassistant.fullname" . }}-scenes
+        emptyDir: {}
       - name: themes
-        configMap:
-          name: {{ include "homeassistant.fullname" . }}-themes
+        emptyDir: {}
       - name: scripts
+        emptyDir: {}
+      - name: reload-webhooks
         configMap:
-          name: {{ include "homeassistant.fullname" . }}-scripts
+          name: {{ include "homeassistant.fullname" . }}-reload-webhooks
+      - name: disable-onboarding
+        configMap:
+          name: {{ include "homeassistant.fullname" . }}-disable-onboarding
   volumeClaimTemplates:
   - metadata:
       name: {{ include "homeassistant.fullname" . }}
