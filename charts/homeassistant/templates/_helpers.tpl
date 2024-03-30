@@ -49,3 +49,7 @@ Selector labels
 app.kubernetes.io/name: {{ include "homeassistant.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{- define "homeassistant.reloader.webhook_id" -}}
+{{ now | toString | sha256sum }}
+{{- end -}}}}
