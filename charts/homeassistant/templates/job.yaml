@@ -1,4 +1,4 @@
-{{- if .Values.homeassistant.adminSecret -}}
+{{- $adminSecret := .Values.homeassistant.adminSecret | required ".Values.homeassistant.adminSecret is required." -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -43,11 +43,10 @@ spec:
         - name: USERNAME
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.homeassistant.adminSecret }}
+              name: {{ $adminSecret }}
               key: USERNAME
         - name: PASSWORD
           valueFrom:
             secretKeyRef:
-              name: {{ .Values.homeassistant.adminSecret }}
+              name: {{ $adminSecret }}
               key: PASSWORD
-{{- end -}}
