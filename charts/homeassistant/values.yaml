@@ -13,6 +13,7 @@ homeassistant:
   storage: 1Gi
   reloader:
     image: kiwigrid/k8s-sidecar:latest
+    webhook_id:                     # Generate a ramdon value to be used for reloading webhooks
     automations:
       enabled: true
       label: homeassistant.automations
@@ -25,31 +26,6 @@ homeassistant:
     themes:
       enabled: true
       label: homeassistant.themes
-  automations:
-    automation1.yaml:
-      alias: "Automation 1"
-      trigger:
-        platform: state
-        entity_id: device_tracker.iphone
-        to: "home"
-      action:
-        service: light.turn_on
-        target:
-          entity_id: light.entryway
-    automation2.yaml:
-      alias: "Automation 2"
-      trigger:
-        platform: state
-        entity_id: device_tracker.iphone
-        from: "home"
-      action:
-        service: light.turn_off
-        target:
-          entity_id: light.entryway
-
-  themes:
-  scripts:
-  scenes:
 
   initConfig: |
     default_config:

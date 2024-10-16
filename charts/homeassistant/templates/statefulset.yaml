@@ -67,7 +67,7 @@ spec:
         - name: REQ_METHOD
           value: POST
         - name: REQ_URL
-          value: http://127.0.0.1:8123/api/webhook/{{ include "homeassistant.reloader.webhook_id" . }}-automations
+          value: http://127.0.0.1:8123/api/webhook/{{ .Values.homeassistant.reloader.webhook_id }}-automations
       {{- end }}
       {{- if .Values.homeassistant.reloader.themes.enabled }}
       - name: config-reloader-themes
@@ -86,7 +86,7 @@ spec:
         - name: REQ_METHOD
           value: POST
         - name: REQ_URL
-          value: http://127.0.0.1:8123/api/webhook/{{ include "homeassistant.reloader.webhook_id" . }}-themes
+          value: http://127.0.0.1:8123/api/webhook/{{ .Values.homeassistant.reloader.webhook_id }}-themes
       {{- end }}
       {{- if .Values.homeassistant.reloader.scripts.enabled }}
       - name: config-reloader-scripts
@@ -105,7 +105,7 @@ spec:
         - name: REQ_METHOD
           value: POST
         - name: REQ_URL
-          value: http://127.0.0.1:8123/api/webhook/{{ include "homeassistant.reloader.webhook_id" . }}-scripts
+          value: http://127.0.0.1:8123/api/webhook/{{ .Values.homeassistant.reloader.webhook_id }}-scripts
       {{- end }}
       {{- if .Values.homeassistant.reloader.scenes.enabled }}
       - name: config-reloader-scenes
@@ -124,7 +124,7 @@ spec:
         - name: REQ_METHOD
           value: POST
         - name: REQ_URL
-          value: http://127.0.0.1:8123/api/webhook/{{ include "homeassistant.reloader.webhook_id" . }}-scenes
+          value: http://127.0.0.1:8123/api/webhook/{{ .Values.homeassistant.reloader.webhook_id }}-scenes
       {{- end }}
       volumes:
       {{- with .Values.homeassistant.config.zigbeeDevice }}
