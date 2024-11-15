@@ -1,0 +1,40 @@
+{{- if .Values.backup.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "homeassistant.fullname" . }}-restore-backup
+  labels:
+    {{- include "homeassistant.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      containers:
+      - name: restore-backup
+        image: alpine:latest
+        command:
+          - /bin/sh
+          - -c
+          - |
+            set -e
+            echo "Starting backup restore job..."
+            
+            # Download the backup
+            echo "Downloading backup..."
+            wget "{{ .Values.backup.source }}" -O /tmp/backup.zip
+            
+            mv /tmp/backup.zip /mnt/homeassistant/
+
+            echo "Backup restore completed."
+        volumeMounts:
+          - name: homeassistant-data
+            mountPath: /mnt/homeassistant
+      restartPolicy: OnFailure
+      volumes:
+        - name: homeassistant-data
+          persistentVolumeClaim:
+            claimName: {{ include "homeassistant.fullname" . }}
+{{- end }}

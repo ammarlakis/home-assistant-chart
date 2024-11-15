@@ -1,7 +1,8 @@
 nameOverride: null
 fullnameOverride: null
+
 homeassistant:
-  adminSecret: null                # Should have two keys USERNAME and PASSWORD
+  adminSecret: test                # Should have two keys USERNAME and PASSWORD
   hostname: homeassistant.home
   image: ghcr.io/home-assistant/home-assistant:latest
   containerPort: 8123
@@ -56,3 +57,12 @@ homeassistant:
       trusted_proxies:
         - 10.42.0.0/24
         - 0.0.0.0/0
+
+  persistence:
+    enabled: false
+    size: "10Gi"
+    storageClass: "standard"
+
+backup:
+  enabled: true
+  source: https://examplefile.com/file-download/42

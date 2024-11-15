@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ include "homeassistant.fullname" . }}
   labels:
@@ -17,6 +17,12 @@ spec:
     spec:
       serviceAccountName: {{ include "homeassistant.fullname" . }}
       hostNetwork: {{ .Values.homeassistant.hostNetwork }}
+      initContainers:
+      - name: wait-for-backup-restore
+        image: ghcr.io/groundnuty/k8s-wait-for:v1.6
+        args:
+          - job
+          - {{ include "homeassistant.fullname" . }}-restore-backup
       containers:
       - name: homeassistant
         image: {{ .Values.homeassistant.image }}
@@ -150,11 +156,6 @@ spec:
       - name: disable-onboarding
         configMap:
           name: {{ include "homeassistant.fullname" . }}-disable-onboarding
-  volumeClaimTemplates:
-  - metadata:
-      name: {{ include "homeassistant.fullname" . }}
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: {{ .Values.homeassistant.storage }}
+      - name: {{ include "homeassistant.fullname" . }}
+        persistentVolumeClaim:
+          claimName: {{ include "homeassistant.fullname" . }}
