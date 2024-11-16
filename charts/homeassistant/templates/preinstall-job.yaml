@@ -24,9 +24,10 @@ spec:
             
             # Download the backup
             echo "Downloading backup..."
-            wget "{{ .Values.backup.source }}" -O /tmp/backup.zip
-            
-            mv /tmp/backup.zip /mnt/homeassistant/
+            wget "{{ .Values.backup.source }}" -O /tmp/backup.tar
+
+            # Extract the data
+            tar -xf /tmp/backup.tar homeassistant.tar.gz --to-stdout | tar -xzf - -C /mnt/homeassistant data
 
             echo "Backup restore completed."
         volumeMounts:
