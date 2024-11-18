@@ -2,33 +2,64 @@ nameOverride: null
 fullnameOverride: null
 
 homeassistant:
-  adminSecret: test                # Should have two keys USERNAME and PASSWORD
+  # -- The reference to a secret containing admin credentials
+  # Should have two keys USERNAME and PASSWORD
+  adminSecret: null
+
+  # -- The hostname for Home Assistant
   hostname: homeassistant.home
-  image: ghcr.io/home-assistant/home-assistant:latest
-  containerPort: 8123
-  hostNetwork: false
-  config:
-    TZ: Europe/Berlin
+
+  # -- The Home Assistant image to use
+  image: ghcr.io/home-assistant/home-assistant
+
+  # -- The Home Assistang image tag
+  # @default `{{ .Chart.AppVersion }}`
+  tag: latest
+
+  # -- The reference to the Zigbee device to use with Home Assistant
   zigbeeDevice: null
-  disableOnboarding: true
+
+  # -- The storage size for Home Assistant
   storage: 1Gi
+
   reloader:
+    # -- The reloader image to use for applying changes
     image: kiwigrid/k8s-sidecar:latest
-    webhook_id:                     # Generate a ramdon value to be used for reloading webhooks
+
+    # -- The webhook ID for the reloader
+    # Generate a random value to be used for reloading webhooks.
+    webhook_id:                    
+
     automations:
+      # -- Whether to enable automations
       enabled: true
+
+      # -- The label for automations
       label: homeassistant.automations
+
     scripts:
+      # -- Whether to enable scripts
       enabled: true
+
+      # -- The label for scripts
       label: homeassistant.scripts
+
     scenes:
+      # -- Whether to enable scenes
       enabled: true
+
+      # -- The label for scenes
       label: homeassistant.scenes
+
     themes:
+      # -- Whether to enable themes
       enabled: true
+
+      # -- The label for themes
       label: homeassistant.themes
 
-  initConfig: |
+  # -- The initial configuration for Home Assistant
+  config: |
     default_config:
 
     homeassistant:
@@ -37,11 +68,10 @@ homeassistant:
       longitude: 35.2354079
       elevation: 747
       unit_system: metric
-      currency: JOD
+      currency: PAL
       country: PS
       time_zone: "Asia/Jerusalem"
       language: "en"
-
 
     frontend:
       themes: !include_dir_merge_named themes
@@ -62,11 +92,28 @@ homeassistant:
         - 10.42.0.0/24
         - 0.0.0.0/0
 
-  persistence:
+  # Ingress configuration
+  ingress:
+    # -- Whether to create an ingress resource
     enabled: false
+    # -- Ingress annotations
+    annotations: {}
+  
+  # -- Persistent storage configuration
+  persistence:
+    # -- Enable persistent storage
+    enabled: false
+
+    # -- Persistent storage size
     size: "10Gi"
+
+    # -- Persistent storage class
     storageClass: "standard"
 
+# Restore configuration
 restore:
+  # -- Whether to enable restore functionality
   enabled: false
+
+  # -- The URL for a Home Assistant backup to be downloaded and restored
   url: ""

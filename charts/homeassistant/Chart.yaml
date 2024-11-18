@@ -1,6 +1,8 @@
 apiVersion: v2
 name: homeassistant
-version: v0.0.12
+version: v1.0.0
+appVersion: 2024.11.2
+icon: https://upload.wikimedia.org/wikipedia/commons/a/ab/New_Home_Assistant_logo.svg
 maintainers:
   - name: ammarlakis
     url: https://github.com/ammarlakis

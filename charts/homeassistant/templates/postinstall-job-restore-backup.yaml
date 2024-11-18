@@ -38,10 +38,10 @@ spec:
             cd /mnt/homeassistant/data && mv * ../ && cd .. && rmdir data
             
             # Remove resources that will be provisioned using configmaps
-            rm -rf /mnt/homeassistant/automations/*
-            rm -rf /mnt/homeassistant/scenes/*
-            rm -rf /mnt/homeassistant/scripts/*
-            rm -rf /mnt/homeassistant/themes/*
+            rm -rf /mnt/homeassistant/automations/
+            rm -rf /mnt/homeassistant/scenes/
+            rm -rf /mnt/homeassistant/scripts/
+            rm -rf /mnt/homeassistant/themes/
             rm -f /mnt/homeassistant/configuration.yaml
 
             echo "Backup restore completed."

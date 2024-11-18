@@ -1,9 +1,13 @@
+{{- if or .Values.homeassistant.reloader.automations.enabled
+          .Values.homeassistant.reloader.themes.enabled
+          .Values.homeassistant.reloader.scenes.enabled
+          .Values.homeassistant.reloader.scripts.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
+kind: Role
 metadata:
   name: {{ include "homeassistant.fullname" . }}
 rules:
 - apiGroups: [""]
   resources: ["configmaps", "secrets"]
   verbs: ["get", "watch", "list"]
-
+{{- end }}

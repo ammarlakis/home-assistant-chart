@@ -6,4 +6,4 @@ metadata:
     {{- include "homeassistant.labels" . | nindent 4 }}
 data:
   configuration.yaml: |
-    {{- .Values.homeassistant.initConfig | nindent 4 }}
+    {{- .Values.homeassistant.config | nindent 4 }}

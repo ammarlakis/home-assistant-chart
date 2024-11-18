@@ -16,7 +16,6 @@ spec:
         {{- include "homeassistant.selectorLabels" . | nindent 8}}
     spec:
       serviceAccountName: {{ include "homeassistant.fullname" . }}
-      hostNetwork: {{ .Values.homeassistant.hostNetwork }}
       initContainers:
       - name: wait-for-backup-restore
         image: ghcr.io/groundnuty/k8s-wait-for:v2.0
@@ -46,16 +45,13 @@ spec:
           mountPath: /config/scenes/
         - name: scripts
           mountPath: /config/scripts/
-        {{- with .Values.homeassistant.config.zigbeeDevice }}
+        {{- with .Values.homeassistant.zigbeeDevice }}
         - name: zigbee-device
-          mountPath: {{ .Values.homeassistant.config.zigbeeDevice }}
+          mountPath: {{ . }}
         {{- end }}
         ports:
-        - containerPort: {{ .Values.homeassistant.containerPort }}
+        - containerPort: 8123
           name: http
-        env:
-        - name: TZ
-          value: {{ .Values.homeassistant.config.TZ }}
       {{- if .Values.homeassistant.reloader.automations.enabled }}
       - name: config-reloader-automations
         image: {{ .Values.homeassistant.reloader.image }}
@@ -133,7 +129,7 @@ spec:
           value: http://127.0.0.1:8123/api/webhook/{{ .Values.homeassistant.reloader.webhook_id }}-scenes
       {{- end }}
       volumes:
-      {{- with .Values.homeassistant.config.zigbeeDevice }}
+      {{- with .Values.homeassistant.zigbeeDevice }}
       - name: zigbee-device
         hostPath:
           path: {{ . }}
@@ -156,6 +152,8 @@ spec:
       - name: disable-onboarding
         configMap:
           name: {{ include "homeassistant.fullname" . }}-disable-onboarding
+      {{- if .Values.homeassistant.persistence.enabled }}
       - name: {{ include "homeassistant.fullname" . }}
         persistentVolumeClaim:
           claimName: {{ include "homeassistant.fullname" . }}
+      {{- end }}
