@@ -19,7 +19,7 @@ spec:
       hostNetwork: {{ .Values.homeassistant.hostNetwork }}
       initContainers:
       - name: wait-for-backup-restore
-        image: ghcr.io/groundnuty/k8s-wait-for:v1.6
+        image: ghcr.io/groundnuty/k8s-wait-for:v2.0
         args:
           - job
           - {{ include "homeassistant.fullname" . }}-restore-backup
