@@ -28,7 +28,7 @@ homeassistant:
 
     # -- The webhook ID for the reloader
     # Generate a random value to be used for reloading webhooks.
-    webhook_id:                    
+    webhook_id:
 
     automations:
       # -- Whether to enable automations
@@ -98,7 +98,7 @@ homeassistant:
     enabled: false
     # -- Ingress annotations
     annotations: {}
-  
+
   # -- Persistent storage configuration
   persistence:
     # -- Enable persistent storage
