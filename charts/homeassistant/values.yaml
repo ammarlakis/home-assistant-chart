@@ -60,7 +60,7 @@ homeassistant:
       # -- The label for themes
       label: homeassistant.themes
 
-  # -- The initial configuration for Home Assistant
+  # -- The configuration for Home Assistant
   config: |
     default_config:
 
