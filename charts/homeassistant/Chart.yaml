@@ -1,8 +1,13 @@
 apiVersion: v2
 name: homeassistant
-version: v1.0.0
+description: A Helm chart for deploying Home Assistant on Kubernetes
+type: application
+home: https://github.com/ammarlakis/home-assistant-chart
+sources:
+  - https://github.com/home-assistant/core
+version: 1.0.0
 appVersion: 2024.11.2
 icon: https://upload.wikimedia.org/wikipedia/commons/a/ab/New_Home_Assistant_logo.svg
 maintainers:
-  - name: ammarlakis
+  - name: Ammar Lakis
     url: https://github.com/ammarlakis
