@@ -1,7 +1,4 @@
-{{- if or .Values.homeassistant.reloader.automations.enabled
-          .Values.homeassistant.reloader.themes.enabled
-          .Values.homeassistant.reloader.scenes.enabled
-          .Values.homeassistant.reloader.scripts.enabled }}
+{{- if or .Values.restore.enabled }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
@@ -14,11 +11,38 @@ rules:
 apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
-  name: {{ include "homeassistant.fullname" . }}-wait-job-binding
+  name: {{ include "homeassistant.fullname" . }}-wait-job
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
   name: {{ include "homeassistant.fullname" . }}-wait-job
+subjects:
+- kind: ServiceAccount
+  name: {{ include "homeassistant.fullname" . }}
+  namespace: {{ .Release.Namespace | quote }}
+{{- end }}
+---
+{{- if or .Values.homeassistant.reloader.automations.enabled
+          .Values.homeassistant.reloader.themes.enabled
+          .Values.homeassistant.reloader.scenes.enabled
+          .Values.homeassistant.reloader.scripts.enabled }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: {{ include "homeassistant.fullname" . }}-reloader
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "secrets"]
+  verbs: ["get", "watch", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: {{ include "homeassistant.fullname" . }}-reloader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: {{ include "homeassistant.fullname" . }}-reloader
 subjects:
 - kind: ServiceAccount
   name: {{ include "homeassistant.fullname" . }}
