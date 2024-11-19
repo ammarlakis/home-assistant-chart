@@ -9,8 +9,8 @@ homeassistant:
   # -- The hostname for Home Assistant
   hostname: homeassistant.home
 
-  
-  image: 
+
+  image:
     # -- The Home Assistant image to use
     path: ghcr.io/home-assistant/home-assistant
     # -- The Home Assistang image tag
