@@ -5,7 +5,6 @@ metadata:
   labels:
     {{- include "homeassistant.labels" . | nindent 4 }}
 spec:
-  serviceName: {{ include "homeassistant.fullname" . }}
   selector:
     matchLabels:
       {{- include "homeassistant.selectorLabels" . | nindent 6}}
