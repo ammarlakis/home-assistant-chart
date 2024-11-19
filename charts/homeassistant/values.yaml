@@ -4,7 +4,7 @@ fullnameOverride: null
 homeassistant:
   # -- The reference to a secret containing admin credentials
   # Should have two keys USERNAME and PASSWORD
-  adminSecret: test
+  adminSecret: null
 
   # -- The hostname for Home Assistant
   hostname: homeassistant.home
