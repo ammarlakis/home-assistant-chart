@@ -1,6 +1,6 @@
 # homeassistant
 
-![Version: v0.0.12](https://img.shields.io/badge/Version-v0.0.12-informational?style=flat-square) ![AppVersion: 2024.11.2](https://img.shields.io/badge/AppVersion-2024.11.2-informational?style=flat-square)
+![Version: v1.0.0](https://img.shields.io/badge/Version-v1.0.0-informational?style=flat-square) ![AppVersion: 2024.11.2](https://img.shields.io/badge/AppVersion-2024.11.2-informational?style=flat-square)
 
 ## Additional Information
 
@@ -25,11 +25,12 @@ $ helm install my-release homeassistant/homeassistant
 |-----|------|---------|-------------|
 | fullnameOverride | string | `nil` |  |
 | homeassistant.adminSecret | string | `nil` | The reference to a secret containing admin credentials Should have two keys USERNAME and PASSWORD |
+| homeassistant.config | string | `"default_config:\n\nhomeassistant:\n  name: Home\n  latitude: 31.7780191\n  longitude: 35.2354079\n  elevation: 747\n  unit_system: metric\n  currency: PAL\n  country: PS\n  time_zone: \"Asia/Jerusalem\"\n  language: \"en\"\n\nfrontend:\n  themes: !include_dir_merge_named themes\n\ntts:\n  - platform: google_translate\n\nautomation: !include_dir_list automations\nautomation ui: !include automations.yaml\nscript: !include_dir_list scripts\nscript ui: !include scripts.yaml\nscene: !include_dir_list scenes\nscene ui: !include scenes.yaml\n\nhttp:\n  use_x_forwarded_for: true\n  trusted_proxies:\n    - 10.42.0.0/24\n    - 0.0.0.0/0\n"` | The initial configuration for Home Assistant |
 | homeassistant.hostname | string | `"homeassistant.home"` | The hostname for Home Assistant |
-| homeassistant.image | string | `"ghcr.io/home-assistant/home-assistant"` | The Home Assistant image to use |
+| homeassistant.image.path | string | `"ghcr.io/home-assistant/home-assistant"` | The Home Assistant image to use |
+| homeassistant.image.tag | string | `"latest"` | The Home Assistang image tag @default `{{ .Chart.AppVersion }}` |
 | homeassistant.ingress.annotations | object | `{}` | Ingress annotations |
 | homeassistant.ingress.enabled | bool | `false` | Whether to create an ingress resource |
-| homeassistant.initConfig | string | `"default_config:\n\nhomeassistant:\n  name: Home\n  latitude: 31.7780191\n  longitude: 35.2354079\n  elevation: 747\n  unit_system: metric\n  currency: PAL\n  country: PS\n  time_zone: \"Asia/Jerusalem\"\n  language: \"en\"\n\nfrontend:\n  themes: !include_dir_merge_named themes\n\ntts:\n  - platform: google_translate\n\nautomation: !include_dir_list automations\nautomation ui: !include automations.yaml\nscript: !include_dir_list scripts\nscript ui: !include scripts.yaml\nscene: !include_dir_list scenes\nscene ui: !include scenes.yaml\n\nhttp:\n  use_x_forwarded_for: true\n  trusted_proxies:\n    - 10.42.0.0/24\n    - 0.0.0.0/0\n"` | The initial configuration for Home Assistant |
 | homeassistant.persistence | object | `{"enabled":false,"size":"10Gi","storageClass":"standard"}` | Persistent storage configuration |
 | homeassistant.persistence.enabled | bool | `false` | Enable persistent storage |
 | homeassistant.persistence.size | string | `"10Gi"` | Persistent storage size |
@@ -45,7 +46,6 @@ $ helm install my-release homeassistant/homeassistant
 | homeassistant.reloader.themes.label | string | `"homeassistant.themes"` | The label for themes |
 | homeassistant.reloader.webhook_id | string | `nil` | The webhook ID for the reloader Generate a random value to be used for reloading webhooks. |
 | homeassistant.storage | string | `"1Gi"` | The storage size for Home Assistant |
-| homeassistant.tag | string | `"latest"` | The Home Assistang image tag @default `{{ .Chart.AppVersion }}` |
 | homeassistant.zigbeeDevice | string | `nil` | The reference to the Zigbee device to use with Home Assistant |
 | nameOverride | string | `nil` |  |
 | restore.enabled | bool | `false` | Whether to enable restore functionality |
