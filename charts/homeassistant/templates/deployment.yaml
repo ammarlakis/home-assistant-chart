@@ -26,8 +26,10 @@ spec:
         image: {{ .Values.homeassistant.image }}
         imagePullPolicy: IfNotPresent
         volumeMounts:
+        {{- if .Values.homeassistant.persistence.enabled }}
         - name: {{ include "homeassistant.fullname" . }}
           mountPath: /config/
+        {{- end }}
         - name: config
           mountPath: /config/configuration.yaml
           subPath: configuration.yaml
