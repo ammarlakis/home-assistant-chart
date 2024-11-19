@@ -25,7 +25,7 @@ spec:
       {{- end }}
       containers:
       - name: homeassistant
-        image: {{ .Values.homeassistant.image }}
+        image: {{ .Values.homeassistant.image.path }}:{{ default .Chart.AppVersion .Values.homeassistant.tag }}
         imagePullPolicy: IfNotPresent
         volumeMounts:
         {{- if .Values.homeassistant.persistence.enabled }}
