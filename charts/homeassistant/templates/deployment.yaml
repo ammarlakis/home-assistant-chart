@@ -31,10 +31,10 @@ spec:
         args:
         - |
           # Create empty configuration files
-          [ ! -f /config/automations.yaml ] && echo "[]" >> /config/automations.yaml
-          [ ! -f /config/scenes.yaml ]      && echo "[]" >> /config/scenes.yaml
-          [ ! -f /config/scripts.yaml ]     && echo "[]" >> /config/scripts.yaml
-          [ ! -f /config/themes.yaml ]      && echo "[]" >> /config/themes.yaml
+          [ -f /config/automations.yaml ] || echo "[]" >> /config/automations.yaml
+          [ -f /config/scenes.yaml ]      || echo "[]" >> /config/scenes.yaml
+          [ -f /config/scripts.yaml ]     || echo "[]" >> /config/scripts.yaml
+          [ -f /config/themes.yaml ]      || echo "[]" >> /config/themes.yaml
         {{- if .Values.homeassistant.persistence.enabled }}
         volumeMounts:
         - name: {{ include "homeassistant.fullname" . }}
