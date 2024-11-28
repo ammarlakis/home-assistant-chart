@@ -15,26 +15,26 @@ spec:
         {{- include "homeassistant.selectorLabels" . | nindent 8}}
     spec:
       serviceAccountName: {{ include "homeassistant.fullname" . }}
-      {{- if .Values.restore.enabled }}
       initContainers:
+      {{- if .Values.restore.enabled }}
       - name: wait-for-backup-restore
         image: ghcr.io/groundnuty/k8s-wait-for:v2.0
         args:
           - job
           - {{ include "homeassistant.fullname" . }}-restore-backup
-      {{- else }}
-      - name: wait-for-backup-restore
+      {{ else }}
+      - name: init-files
         image: busybox:stable
         command:
         - sh
+        - '-c'
+        args:
         - |
           # Create empty configuration files
-          echo "[]" >> /mnt/homeassistant/automations.yaml
-          echo "[]" >> /mnt/homeassistant/scenes.yaml
-          echo "[]" >> /mnt/homeassistant/scripts.yaml
-          echo "[]" >> /mnt/homeassistant/themes.yaml
-        args:
-        - 'touch automations.yaml scripts.yaml scenes.yaml'
+          [ ! -f /config/automations.yaml ] && echo "[]" >> /config/automations.yaml
+          [ ! -f /config/scenes.yaml ]      && echo "[]" >> /config/scenes.yaml
+          [ ! -f /config/scripts.yaml ]     && echo "[]" >> /config/scripts.yaml
+          [ ! -f /config/themes.yaml ]      && echo "[]" >> /config/themes.yaml
         {{- if .Values.homeassistant.persistence.enabled }}
         volumeMounts:
         - name: {{ include "homeassistant.fullname" . }}
