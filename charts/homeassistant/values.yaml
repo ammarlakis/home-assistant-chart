@@ -22,7 +22,6 @@ homeassistant:
   zigbeeDevice: null
 
   # -- The storage size for Home Assistant
-  storage: 1Gi
 
   reloader:
     # -- The reloader image to use for applying changes
@@ -70,7 +69,7 @@ homeassistant:
       longitude: 35.2354079
       elevation: 747
       unit_system: metric
-      currency: PAL
+      currency: JOD
       country: PS
       time_zone: "Asia/Jerusalem"
       language: "en"
