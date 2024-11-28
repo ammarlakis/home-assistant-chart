@@ -1,0 +1,56 @@
+{{- if .Values.restore.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "homeassistant.fullname" . }}-restore-backup
+  labels:
+    {{- include "homeassistant.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    spec:
+      containers:
+      - name: restore-backup
+        image: alpine:latest
+        command:
+          - /bin/sh
+          - -c
+          - |
+            set -e
+            echo "Starting backup restore job..."
+            
+            # Download the backup
+            echo "Downloading backup..."
+            wget "{{ .Values.restore.url }}" -O /tmp/backup.tar
+
+            # Create empty configuration files
+            echo "[]" >> /mnt/homeassistant/automations.yaml
+            echo "[]" >> /mnt/homeassistant/scenes.yaml
+            echo "[]" >> /mnt/homeassistant/scripts.yaml
+            echo "[]" >> /mnt/homeassistant/themes.yaml
+
+            # Extract the data
+            tar -xf /tmp/backup.tar homeassistant.tar.gz --to-stdout | tar -xzf - --strip-components=1 -C /mnt/homeassistant/ data
+
+            cd /mnt/homeassistant/data && mv * ../ && cd .. && rmdir data
+            
+            # Remove resources that will be provisioned using configmaps
+            rm -rf /mnt/homeassistant/automations/
+            rm -rf /mnt/homeassistant/scenes/
+            rm -rf /mnt/homeassistant/scripts/
+            rm -rf /mnt/homeassistant/themes/
+            rm -f /mnt/homeassistant/configuration.yaml
+
+            echo "Backup restore completed."
+        volumeMounts:
+          - name: homeassistant-data
+            mountPath: /mnt/homeassistant
+      restartPolicy: OnFailure
+      volumes:
+        - name: homeassistant-data
+          persistentVolumeClaim:
+            claimName: {{ include "homeassistant.fullname" . }}
+{{- end }}

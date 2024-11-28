@@ -1,11 +1,10 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: {{ include "homeassistant.fullname" . }}
   labels:
     {{- include "homeassistant.labels" . | nindent 4 }}
 spec:
-  serviceName: {{ include "homeassistant.fullname" . }}
   selector:
     matchLabels:
       {{- include "homeassistant.selectorLabels" . | nindent 6}}
@@ -16,14 +15,23 @@ spec:
         {{- include "homeassistant.selectorLabels" . | nindent 8}}
     spec:
       serviceAccountName: {{ include "homeassistant.fullname" . }}
-      hostNetwork: {{ .Values.homeassistant.hostNetwork }}
+      {{- if .Values.restore.enabled }}
+      initContainers:
+      - name: wait-for-backup-restore
+        image: ghcr.io/groundnuty/k8s-wait-for:v2.0
+        args:
+          - job
+          - {{ include "homeassistant.fullname" . }}-restore-backup
+      {{- end }}
       containers:
       - name: homeassistant
-        image: {{ .Values.homeassistant.image }}
+        image: {{ .Values.homeassistant.image.path }}:{{ default .Chart.AppVersion .Values.homeassistant.tag }}
         imagePullPolicy: IfNotPresent
         volumeMounts:
+        {{- if .Values.homeassistant.persistence.enabled }}
         - name: {{ include "homeassistant.fullname" . }}
           mountPath: /config/
+        {{- end }}
         - name: config
           mountPath: /config/configuration.yaml
           subPath: configuration.yaml
@@ -40,16 +48,13 @@ spec:
           mountPath: /config/scenes/
         - name: scripts
           mountPath: /config/scripts/
-        {{- with .Values.homeassistant.config.zigbeeDevice }}
+        {{- with .Values.homeassistant.zigbeeDevice }}
         - name: zigbee-device
-          mountPath: {{ .Values.homeassistant.config.zigbeeDevice }}
+          mountPath: {{ . }}
         {{- end }}
         ports:
-        - containerPort: {{ .Values.homeassistant.containerPort }}
+        - containerPort: 8123
           name: http
-        env:
-        - name: TZ
-          value: {{ .Values.homeassistant.config.TZ }}
       {{- if .Values.homeassistant.reloader.automations.enabled }}
       - name: config-reloader-automations
         image: {{ .Values.homeassistant.reloader.image }}
@@ -67,7 +72,7 @@ spec:
         - name: REQ_METHOD
           value: POST
         - name: REQ_URL
-          value: http://127.0.0.1:8123/api/webhook/{{ include "homeassistant.reloader.webhook_id" . }}-automations
+          value: http://127.0.0.1:8123/api/webhook/{{ .Values.homeassistant.reloader.webhook_id }}-automations
       {{- end }}
       {{- if .Values.homeassistant.reloader.themes.enabled }}
       - name: config-reloader-themes
@@ -86,7 +91,7 @@ spec:
         - name: REQ_METHOD
           value: POST
         - name: REQ_URL
-          value: http://127.0.0.1:8123/api/webhook/{{ include "homeassistant.reloader.webhook_id" . }}-themes
+          value: http://127.0.0.1:8123/api/webhook/{{ .Values.homeassistant.reloader.webhook_id }}-themes
       {{- end }}
       {{- if .Values.homeassistant.reloader.scripts.enabled }}
       - name: config-reloader-scripts
@@ -105,7 +110,7 @@ spec:
         - name: REQ_METHOD
           value: POST
         - name: REQ_URL
-          value: http://127.0.0.1:8123/api/webhook/{{ include "homeassistant.reloader.webhook_id" . }}-scripts
+          value: http://127.0.0.1:8123/api/webhook/{{ .Values.homeassistant.reloader.webhook_id }}-scripts
       {{- end }}
       {{- if .Values.homeassistant.reloader.scenes.enabled }}
       - name: config-reloader-scenes
@@ -124,10 +129,10 @@ spec:
         - name: REQ_METHOD
           value: POST
         - name: REQ_URL
-          value: http://127.0.0.1:8123/api/webhook/{{ include "homeassistant.reloader.webhook_id" . }}-scenes
+          value: http://127.0.0.1:8123/api/webhook/{{ .Values.homeassistant.reloader.webhook_id }}-scenes
       {{- end }}
       volumes:
-      {{- with .Values.homeassistant.config.zigbeeDevice }}
+      {{- with .Values.homeassistant.zigbeeDevice }}
       - name: zigbee-device
         hostPath:
           path: {{ . }}
@@ -150,11 +155,8 @@ spec:
       - name: disable-onboarding
         configMap:
           name: {{ include "homeassistant.fullname" . }}-disable-onboarding
-  volumeClaimTemplates:
-  - metadata:
-      name: {{ include "homeassistant.fullname" . }}
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      resources:
-        requests:
-          storage: {{ .Values.homeassistant.storage }}
+      {{- if .Values.homeassistant.persistence.enabled }}
+      - name: {{ include "homeassistant.fullname" . }}
+        persistentVolumeClaim:
+          claimName: {{ include "homeassistant.fullname" . }}
+      {{- end }}

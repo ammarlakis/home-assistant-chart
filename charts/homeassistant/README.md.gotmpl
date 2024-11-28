@@ -1,0 +1,75 @@
+{{ template "chart.header" . }}
+{{ template "chart.description" . }}
+
+{{ template "chart.versionBadge" . }}{{ template "chart.typeBadge" . }}{{ template "chart.appVersionBadge" . }}
+
+## Overview
+
+This Helm chart enables the deployment of a Home Assistant instance on Kubernetes. It supports:
+- Restoring Home Assistant backups during fresh installations.
+- Reloading configurations dynamically using ConfigMaps and Secrets.
+
+## Usage
+
+### Installing the Chart
+
+To install the chart with the release name `my-release`:
+
+```bash
+helm repo add homeassistant https://ammarlakis.github.io/home-assistant-chart
+helm install my-release homeassistant/{{ template "chart.name" . }}
+```
+
+### Restoring Backups
+
+To restore a backup during installation:
+1. Set the URL where the backup archive can be downloaded in `.Values.reloader.url`.
+2. Enable the reloader by setting `.Values.reloader.enabled` to `true`.
+
+> **Note**: Backup restoration is only supported during fresh installations.
+
+### Reloading Configuration
+
+Configurations can be reloaded dynamically by creating `ConfigMaps` or `Secrets` with specific labels. The labels are defined in `.Values.homeassistant.reloader.*.label` and default to:
+- `homeassistant.automations`
+- `homeassistant.scenes`
+- `homeassistant.themes`
+- `homeassistant.scripts`
+
+#### Example ConfigMap
+
+Below is an example `ConfigMap` for Home Assistant automations:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homeassistant-config-mct9kb5d72
+  labels:
+    homeassistant.automations: homeassistant
+data:
+  bathroom-light-brightness-adjustment.yaml: |
+    alias: Bathroom light brightness adjustment
+    description: ''
+    trigger:
+      - platform: state
+        entity_id:
+          - input_number.bathroom_light_brightness
+    condition:
+      - condition: state
+        entity_id: light.bathroom_light
+        state: 'on'
+    action:
+      - service: automation.trigger
+        data:
+          skip_condition: true
+        target:
+          entity_id: automation.bathroom_light_brightness
+    mode: single
+```
+
+## Values
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}

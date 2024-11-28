@@ -15,7 +15,7 @@ data:
         allowed_methods:
           - POST
         local_only: true
-        webhook_id: {{ printf "%s-scripts" (include "homeassistant.reloader.webhook_id" .) | quote}}
+        webhook_id: {{ printf "%s-scripts" .Values.homeassistant.reloader.webhook_id | quote}}
     condition: []
     action:
       - service: script.reload
@@ -33,7 +33,7 @@ data:
         allowed_methods:
           - POST
         local_only: true
-        webhook_id: {{ printf "%s-scenes" (include "homeassistant.reloader.webhook_id" .) | quote}}
+        webhook_id: {{ printf "%s-scenes" .Values.homeassistant.reloader.webhook_id | quote}}
     condition: []
     action:
       - service: scene.reload
@@ -51,7 +51,7 @@ data:
         allowed_methods:
           - POST
         local_only: true
-        webhook_id: {{ printf "%s-themes" (include "homeassistant.reloader.webhook_id" .) | quote}}
+        webhook_id: {{ printf "%s-themes" .Values.homeassistant.reloader.webhook_id | quote}}
     condition: []
     action:
       - service: frontend.reload_themes
@@ -69,7 +69,7 @@ data:
         allowed_methods:
           - POST
         local_only: true
-        webhook_id: {{ printf "%s-automations" (include "homeassistant.reloader.webhook_id" .) | quote}}
+        webhook_id: {{ printf "%s-automations" .Values.homeassistant.reloader.webhook_id | quote}}
     condition: []
     action:
       - service: automation.reload
