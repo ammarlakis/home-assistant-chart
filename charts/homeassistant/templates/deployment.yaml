@@ -15,7 +15,7 @@ spec:
         {{- include "homeassistant.selectorLabels" . | nindent 8}}
     spec:
       serviceAccountName: {{ include "homeassistant.fullname" . }}
-      {{- if .Values.restore.enabled }}
+      {{- if and .Values.restore.enabled .Values.homeassistant.persistence.enabled }}
       initContainers:
       - name: wait-for-backup-restore
         image: ghcr.io/groundnuty/k8s-wait-for:v2.0

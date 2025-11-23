@@ -116,3 +116,6 @@ restore:
 
   # -- The URL for a Home Assistant backup to be downloaded and restored
   url: ""
+  image:
+    repository: alpine
+    tag: "3.20"

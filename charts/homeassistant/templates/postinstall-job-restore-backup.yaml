@@ -1,4 +1,4 @@
-{{- if .Values.restore.enabled }}
+{{- if and .Values.restore.enabled .Values.homeassistant.persistence.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -14,12 +14,13 @@ spec:
     spec:
       containers:
       - name: restore-backup
-        image: alpine:latest
+        image: {{ .Values.restore.image.repository }}:{{ .Values.restore.image.tag }}
         command:
           - /bin/sh
           - -c
           - |
             set -e
+            apk add --no-cache wget tar
             echo "Starting backup restore job..."
             
             # Download the backup
