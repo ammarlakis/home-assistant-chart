@@ -11,10 +11,10 @@ homeassistant:
 
   image:
     # -- The Home Assistant image to use
-    path: ghcr.io/home-assistant/home-assistant
+    repository: ghcr.io/home-assistant/home-assistant
     # -- The Home Assistang image tag
     # @default `{{ .Chart.AppVersion }}`
-    tag: latest
+    tag: ""
 
   # -- The reference to the Zigbee device to use with Home Assistant
   zigbeeDevice: null
