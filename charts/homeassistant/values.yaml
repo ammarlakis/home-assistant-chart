@@ -9,14 +9,12 @@ homeassistant:
   # -- The hostname for Home Assistant
   hostname: homeassistant.home
 
-
   image:
     # -- The Home Assistant image to use
     path: ghcr.io/home-assistant/home-assistant
     # -- The Home Assistang image tag
     # @default `{{ .Chart.AppVersion }}`
     tag: latest
-
 
   # -- The reference to the Zigbee device to use with Home Assistant
   zigbeeDevice: null

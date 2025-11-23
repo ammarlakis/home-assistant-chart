@@ -16,8 +16,8 @@ This Helm chart enables the deployment of a Home Assistant instance on Kubernete
 To install the chart with the release name `my-release`:
 
 ```bash
-helm repo add homeassistant https://ammarlakis.github.io/home-assistant-chart
-helm install my-release homeassistant/{{ template "chart.name" . }}
+helm repo add ammarlakis https://ammarlakis.github.io/helm-charts
+helm install my-release ammarlakis/{{ template "chart.name" . }}
 ```
 
 ### Restoring Backups
