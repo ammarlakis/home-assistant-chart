@@ -109,6 +109,8 @@ homeassistant:
     enabled: false
     # -- Ingress annotations
     annotations: {}
+    className: ""
+    tlsSecretName: ""
 
   # -- Persistent storage configuration
   persistence:
