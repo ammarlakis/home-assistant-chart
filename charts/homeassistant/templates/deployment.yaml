@@ -13,8 +13,16 @@ spec:
     metadata:
       labels:
         {{- include "homeassistant.selectorLabels" . | nindent 8}}
+      {{- with .Values.homeassistant.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       serviceAccountName: {{ include "homeassistant.fullname" . }}
+      {{- with .Values.homeassistant.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- if and .Values.restore.enabled .Values.homeassistant.persistence.enabled }}
       initContainers:
       - name: wait-for-backup-restore
@@ -27,6 +35,10 @@ spec:
       - name: homeassistant
         image: {{ .Values.homeassistant.image.repository }}:{{ default .Chart.AppVersion .Values.homeassistant.image.tag }}
         imagePullPolicy: IfNotPresent
+        {{- with .Values.homeassistant.securityContext }}
+        securityContext:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         volumeMounts:
         {{- if .Values.homeassistant.persistence.enabled }}
         - name: {{ include "homeassistant.fullname" . }}
@@ -55,6 +67,10 @@ spec:
         ports:
         - containerPort: 8123
           name: http
+        {{- with .Values.homeassistant.resources }}
+        resources:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       {{- if .Values.homeassistant.reloader.automations.enabled }}
       - name: config-reloader-automations
         image: {{ .Values.homeassistant.reloader.image }}
@@ -159,4 +175,16 @@ spec:
       - name: {{ include "homeassistant.fullname" . }}
         persistentVolumeClaim:
           claimName: {{ include "homeassistant.fullname" . }}
+      {{- end }}
+      {{- with .Values.homeassistant.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.homeassistant.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.homeassistant.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
       {{- end }}

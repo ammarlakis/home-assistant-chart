@@ -8,6 +8,15 @@ metadata:
   annotations:
     {{- toYaml .Values.homeassistant.ingress.annotations | nindent 4 }}
 spec:
+  {{- with .Values.homeassistant.ingress.className }}
+  ingressClassName: {{ . | quote }}
+  {{- end }}
+  {{- with .Values.homeassistant.ingress.tlsSecretName }}
+  tls:
+    - hosts:
+        - {{ $.Values.homeassistant.hostname }}
+      secretName: {{ . }}
+  {{- end }}
   rules:
   - host: {{ .Values.homeassistant.hostname }}
     http:
@@ -18,5 +27,5 @@ spec:
             name: {{ include "homeassistant.fullname" . }}
             port:
               name: http
-        pathType: ImplementationSpecific
+        pathType: Prefix
 {{- end }}

@@ -57,6 +57,11 @@ homeassistant:
       # -- The label for themes
       label: homeassistant.themes
 
+  service:
+    type: ClusterIP
+    port: 80
+    annotations: {}
+
   # -- The configuration for Home Assistant
   config: |
     default_config:
@@ -89,6 +94,14 @@ homeassistant:
       use_x_forwarded_for: true
       trusted_proxies:
         - 10.42.0.0/24
+
+  resources: {}
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
 
   # Ingress configuration
   ingress:
