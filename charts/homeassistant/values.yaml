@@ -89,7 +89,6 @@ homeassistant:
       use_x_forwarded_for: true
       trusted_proxies:
         - 10.42.0.0/24
-        - 0.0.0.0/0
 
   # Ingress configuration
   ingress:
