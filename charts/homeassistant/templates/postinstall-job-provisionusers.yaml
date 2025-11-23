@@ -25,9 +25,22 @@ spec:
         - >
           set -x;
           echo "Waiting for home-assistant to start up ...";
-          while [ $(curl -L -v --connect-timeout 5 -sw '%{http_code}' "http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}/" -o /dev/null) -ne 200 ]; do
+          retries=0;
+          max_retries=40;
+          status=000;
+          while [ "$retries" -lt "$max_retries" ]; do
+            status=$(curl -L --connect-timeout 5 -sw '%{http_code}' "http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}/" -o /dev/null || echo 000);
+            if [ "$status" -ge 200 ] && [ "$status" -lt 400 ]; then
+              break;
+            fi;
+            echo "Home Assistant not ready yet (status: $status). Retrying in 15s ($retries/$max_retries) ...";
+            retries=$((retries+1));
             sleep 15;
           done;
+          if [ "$status" -lt 200 ] || [ "$status" -ge 400 ]; then
+            echo "Home Assistant did not become ready in time (final status: $status). Aborting provisioning.";
+            exit 1;
+          fi;
           echo "Home Assistant is up and running.";
           echo "Creating admin user ..";
           curl --location --request POST 'http://{{ include "homeassistant.fullname" . }}.{{ .Release.Namespace }}/api/onboarding/users'
