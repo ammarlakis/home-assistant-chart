@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: smoke-admin
+type: Opaque
+stringData:
+  USERNAME: smoke-admin
+  PASSWORD: smoke-test-password

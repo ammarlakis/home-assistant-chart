@@ -1,0 +1,8 @@
+homeassistant:
+  adminSecret: smoke-admin
+  persistence:
+    enabled: false
+  reloader:
+    webhook_id: ci-smoke
+  config: |
+    default_config:
