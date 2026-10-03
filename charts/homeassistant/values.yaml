@@ -14,7 +14,7 @@ homeassistant:
     repository: ghcr.io/home-assistant/home-assistant
     # -- The Home Assistang image tag
     # @default `{{ .Chart.AppVersion }}`
-    tag: ""
+    tag: "2026.9.4"
 
   # -- The reference to the Zigbee device to use with Home Assistant
   zigbeeDevice: null
