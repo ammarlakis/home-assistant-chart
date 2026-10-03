@@ -7,7 +7,7 @@ sources:
   - https://github.com/home-assistant/core
 version: 1.0.1
 # renovate: image=ghcr.io/home-assistant/home-assistant
-appVersion: 2024.11.2
+appVersion: 2026.9.4
 icon: https://upload.wikimedia.org/wikipedia/commons/a/ab/New_Home_Assistant_logo.svg
 maintainers:
   - name: ammarlakis
