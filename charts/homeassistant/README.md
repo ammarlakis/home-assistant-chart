@@ -2,7 +2,7 @@
 
 A Helm chart for deploying Home Assistant on Kubernetes
 
-![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2026.9.4](https://img.shields.io/badge/AppVersion-2026.9.4-informational?style=flat-square)
+![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2026.11.2](https://img.shields.io/badge/AppVersion-2026.11.2-informational?style=flat-square)
 
 ## Overview
 
@@ -81,7 +81,7 @@ data:
 | homeassistant.config | string | `"default_config:\n\nhomeassistant:\n  name: Home\n  latitude: 31.7780191\n  longitude: 35.2354079\n  elevation: 747\n  unit_system: metric\n  currency: JOD\n  country: PS\n  time_zone: \"Asia/Jerusalem\"\n  language: \"en\"\n\nfrontend:\n  themes: !include_dir_merge_named themes\n\ntts:\n  - platform: google_translate\n\nautomation: !include_dir_list automations\nautomation ui: !include automations.yaml\nscript: !include_dir_list scripts\nscript ui: !include scripts.yaml\nscene: !include_dir_list scenes\nscene ui: !include scenes.yaml\n\nhttp:\n  use_x_forwarded_for: true\n  trusted_proxies:\n    - 10.42.0.0/24\n"` | The configuration for Home Assistant |
 | homeassistant.hostname | string | `"homeassistant.home"` | The hostname for Home Assistant |
 | homeassistant.image.repository | string | `"ghcr.io/home-assistant/home-assistant"` | The Home Assistant image to use |
-| homeassistant.image.tag | string | `"2026.9.4"` | The Home Assistang image tag @default `{{ .Chart.AppVersion }}` |
+| homeassistant.image.tag | string | `"2026.11.2@sha256:493a07e8f6530fc640223f4a0a5248f20a61ca2f718bb1d31efbf08a2c5ea28f"` | The Home Assistang image tag @default `{{ .Chart.AppVersion }}` |
 | homeassistant.ingress.annotations | object | `{}` | Ingress annotations |
 | homeassistant.ingress.className | string | `""` |  |
 | homeassistant.ingress.enabled | bool | `false` | Whether to create an ingress resource |
@@ -93,10 +93,10 @@ data:
 | homeassistant.persistence.storageClass | string | `"standard"` | Persistent storage class |
 | homeassistant.podAnnotations | object | `{}` |  |
 | homeassistant.podSecurityContext | object | `{}` |  |
-| homeassistant.reloader | object | `{"automations":{"enabled":true,"label":"homeassistant.automations"},"image":"kiwigrid/k8s-sidecar:2.11.2@sha256:2912be006f62f9ea080194cf6d3afcd90daead8d101d0ba686a137a849f6a4f6","scenes":{"enabled":true,"label":"homeassistant.scenes"},"scripts":{"enabled":true,"label":"homeassistant.scripts"},"themes":{"enabled":true,"label":"homeassistant.themes"},"webhook_id":null}` | The storage size for Home Assistant |
+| homeassistant.reloader | object | `{"automations":{"enabled":true,"label":"homeassistant.automations"},"image":"kiwigrid/k8s-sidecar:2.14.3@sha256:52d311dcedd587421a236c4d6c621f05614c40a51386e955e0699dca97ec0880","scenes":{"enabled":true,"label":"homeassistant.scenes"},"scripts":{"enabled":true,"label":"homeassistant.scripts"},"themes":{"enabled":true,"label":"homeassistant.themes"},"webhook_id":null}` | The storage size for Home Assistant |
 | homeassistant.reloader.automations.enabled | bool | `true` | Whether to enable automations |
 | homeassistant.reloader.automations.label | string | `"homeassistant.automations"` | The label for automations |
-| homeassistant.reloader.image | string | `"kiwigrid/k8s-sidecar:2.11.2@sha256:2912be006f62f9ea080194cf6d3afcd90daead8d101d0ba686a137a849f6a4f6"` | The reloader image to use for applying changes |
+| homeassistant.reloader.image | string | `"kiwigrid/k8s-sidecar:2.14.3@sha256:52d311dcedd587421a236c4d6c621f05614c40a51386e955e0699dca97ec0880"` | The reloader image to use for applying changes |
 | homeassistant.reloader.scenes.enabled | bool | `true` | Whether to enable scenes |
 | homeassistant.reloader.scenes.label | string | `"homeassistant.scenes"` | The label for scenes |
 | homeassistant.reloader.scripts.enabled | bool | `true` | Whether to enable scripts |
@@ -114,7 +114,7 @@ data:
 | nameOverride | string | `nil` |  |
 | restore.enabled | bool | `false` | Whether to enable restore functionality |
 | restore.image.repository | string | `"alpine"` |  |
-| restore.image.tag | string | `"3.24.3@sha256:be2656061b536c1883c4034790e21d0a09c5aaaf51968b89368a3c0371ea2c9a"` |  |
+| restore.image.tag | string | `"3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf"` |  |
 | restore.url | string | `""` | The URL for a Home Assistant backup to be downloaded and restored |
 
 ----------------------------------------------
